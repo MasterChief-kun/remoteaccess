@@ -43,18 +43,18 @@ export const columns: ColumnDef<z.infer<typeof nodeSchema>>[] = [
 
       async function sendWOL() {
         row.original.status = "loading"
-        table.options.meta.onLoading()
+        table?.options?.meta?.onLoading()
 
         let req = await fetch(`/api/node/status?mac=${node.mac}`, { method: "GET" })
         let res = await req.json()
 
-        table.options.meta.onLoading()
+        table?.options?.meta?.onLoading()
         return res
       }
 
       return (
-        (!table.options.meta.loading) ?
-          <Button type="outline" className="h-8 w-8 p-0" onClick={sendWOL}>
+        (!table?.options?.meta?.loading) ?
+          <Button variant="outline" className="h-8 w-8 p-0" onClick={sendWOL}>
             <CircleArrowOutUpRight className="h-4 w-4"/>
           </Button>
         :
