@@ -11,9 +11,14 @@ import NodeForm from "@/components/ui/nodeForm"
 import { Plus } from "lucide-react"
 
 async function getData(): Promise<z.infer<typeof nodeSchema>[]> {
-  await dbConnect();
-  let nodes = await Node.find({})
+  // await dbConnect();
+  // let nodes = await Node.find({})
+  let req = await fetch(`${process.env.URL}/api/node/get`, {
+    method: "GET",
+    cache: 'force-cache'
+  })
 
+  let nodes = await req.json()
   return nodes;
 }
 

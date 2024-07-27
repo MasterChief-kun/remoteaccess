@@ -1,5 +1,6 @@
 import Node from "@/models/Node"
 import { exec as execCP } from "child_process"
+import { revalidatePath } from "next/cache"
 import util from "util"
 const exec = util.promisify(execCP)
 
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
     let data = await request.json()
     let out =  await checkStatus(data.ips)
 
+    revalidatePath('/')
     return Response.json(out)
 
 }
