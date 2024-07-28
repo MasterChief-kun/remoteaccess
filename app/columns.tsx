@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { z } from "zod"
 import { nodeSchema } from "@/lib/zod"
-import { CircleArrowOutUpRight, Loader2, MoreHorizontal } from "lucide-react"
+import { CircleArrowOutUpRight, Delete, Edit, Loader2, MoreHorizontal, Power, RefreshCcw, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +17,8 @@ import {
 import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { table } from "console"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import NodeForm from "@/components/ui/nodeForm"
 
 export const columns: ColumnDef<z.infer<typeof nodeSchema>>[] = [
   {
@@ -76,6 +78,7 @@ export const columns: ColumnDef<z.infer<typeof nodeSchema>>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+          <Dialog>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
         {/*     <DropdownMenuItem */}
@@ -90,11 +93,43 @@ export const columns: ColumnDef<z.infer<typeof nodeSchema>>[] = [
                   ips: [node.ip_add]
                 })
               })
-            }}>Refresh</DropdownMenuItem>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            }}>
+              <RefreshCcw className="p-1"/>
+              Refresh
+            </DropdownMenuItem>
+
+              <DialogTrigger asChild>
+                <DropdownMenuItem>
+                  <Edit className='p-1'/>
+                  Edit
+                </DropdownMenuItem>
+              </DialogTrigger>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={async () => {
+              let req = await fetch(`/api/node/status/shutdown?id=${node?._id}`, {
+                method: "GET"
+              })
+            }}>
+              <Power className="p-1"/>
+              Request Shutdown
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={async () => {
+              let req = await fetch(`/api/node/delete?id=${node?._id}`, {
+                method: "DELETE"
+              })
+            }}>
+              <Trash2 className="p-1"/>
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
+          <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit Node</DialogTitle>
+                <DialogDescription>Edit node. Click save when done.</DialogDescription>
+              </DialogHeader>
+              <NodeForm edit={true} editObj={node}/>
+            </DialogContent>
+          </Dialog>
         </DropdownMenu>
         )
     }

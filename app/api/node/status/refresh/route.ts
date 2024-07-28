@@ -1,9 +1,8 @@
 import Node from "@/models/Node"
-import { exec as execCP } from "child_process"
 import { revalidatePath } from "next/cache"
+import { exec as execCP } from "child_process"
 import util from "util"
 const exec = util.promisify(execCP)
-
 
 async function checkStatus(ips: string[]) {
     let { stdout, stderr } = await exec('nmap -sP 192.168.1.255/24')

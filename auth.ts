@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 const { email, password } = await signInSchema.parseAsync(credentials)
                 // const pwdHash = await (password)
                 // user = await User.findOne({email: email}).exec()
-                let userReq = await fetch("/api/user/get", {
+                let userReq = await fetch(`${process.env.URL}/api/user/get`, {
                     method: 'POST',
                     body: JSON.stringify({
                         email: email

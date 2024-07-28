@@ -11,9 +11,9 @@ export async function POST(request: Request) {
     let user = null;
 
     if(id) {
-        user = await User.find({ _id: id })
+        user = await User.findOne({ _id: id })
     } else {
-        user = await User.find({ email: email })
+        user = await User.findOne({ email: email })
     }
 
     return Response.json( user )

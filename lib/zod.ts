@@ -1,4 +1,4 @@
-import { boolean, object, string, z, number } from "zod"
+import { boolean, object, string, z, number, coerce } from "zod"
 // import mongoose from "mongoose"
 
 export const signInSchema = object({
@@ -16,5 +16,5 @@ export const nodeSchema = object({
     mac: string({ required_error: "Mac Address is required" }),
     status: string(),
     ip_add: string(),
-    port: number(),
+    port: coerce.number().int(),
 })

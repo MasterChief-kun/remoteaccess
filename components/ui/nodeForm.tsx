@@ -25,6 +25,7 @@ import { DialogClose } from "./dialog";
 // import dbConnect from "@/lib/mongoUtils";
 type NodeFormProps = {
   edit?: boolean;
+  editObj?: object;
 }
 
 export default function NodeForm(props: NodeFormProps){
@@ -33,11 +34,11 @@ export default function NodeForm(props: NodeFormProps){
   const form = useForm<z.infer<typeof nodeSchema>>({
     resolver: zodResolver(nodeSchema),
     defaultValues: {
-      name: "",
-      mac: "",
-      port: 22,
-      status: "off",
-      ip_add: ""
+      name: props.editObj?.name || "",
+      mac: props.editObj?.mac || "",
+      port: props.editObj?.port || 22,
+      status: props.editObj?.status || "off",
+      ip_add: props.editObj?.ip_add || ""
     }
   })
   async function onSubmit(values: z.infer<typeof nodeSchema>) {
@@ -56,9 +57,16 @@ export default function NodeForm(props: NodeFormProps){
     // }
     // "use server"
     // await dbConnect();
-    await createNode(values).then(() => {
-      router.push("/")
-    })
+    if(!props.edit) {
+      await createNode(values).then(() => {
+        router.push("/")
+      })
+    } else {
+      let req = await fetch(`/api/node/update?id=${props.editObj._id}`, {
+        method: "POST",
+        body: JSON.stringify(values)
+      });
+    }
   }
 
   return (
@@ -71,7 +79,7 @@ export default function NodeForm(props: NodeFormProps){
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder={props?.editObj?.name} {...field} />
                 </FormControl>
                 {/* <FormDescription> */}
                 {/*   Your Email Address. */}
@@ -87,7 +95,7 @@ export default function NodeForm(props: NodeFormProps){
               <FormItem>
                 <FormLabel>Mac Address</FormLabel>
                 <FormControl>
-                  <Input {...field}/>
+                  <Input placeholder={props?.editObj?.mac} {...field}/>
                 </FormControl>
               </FormItem>
             )}
@@ -101,7 +109,7 @@ export default function NodeForm(props: NodeFormProps){
               <FormItem>
                 <FormLabel>IP Address</FormLabel>
                 <FormControl>
-                  <Input {...field}/>
+                  <Input placeholder={props?.editObj?.ip_add} {...field}/>
                 </FormControl>
               </FormItem>
             )}
@@ -115,17 +123,19 @@ export default function NodeForm(props: NodeFormProps){
               <FormItem>
                 <FormLabel>SSH Port</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field}/>
+                  <Input placeholder={props?.editObj?.port} type="number" {...field}/>
                 </FormControl>
               </FormItem>
             )}
           >
 
           </FormField>
-          <div>
-            <DialogClose asChild>
-                <Button className="w-full" type="submit">Create</Button>
-            </DialogClose>
+           <div>
+             { /* <DialogClose asChild> */}
+                <Button className="w-full" type="submit">
+                  { props.edit ? <div>Edit</div>: <div>Save</div> }
+                </Button>
+            {/* </DialogClose> */}
           </div>
         </form>
     </Form>

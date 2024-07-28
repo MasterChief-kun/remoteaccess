@@ -1,7 +1,7 @@
 * Inbox
-** TODO Add ping function to check node status on request
-** TODO WOL request, either use package or create own
-** TODO Service to ping server on start and shut-down
+** TODO Add ping function to check node status on request :DONE:
+** TODO WOL request, either use package or create own :DONE:
+** TODO Service to ping server on start and shut-down :TESTING:
 ** TODO Shutdown capability via SSH(?)
 
 [[file:~/Projects/remoteaccess/app/page.tsx::<DialogDescription>Create new node. Click create when done.</DialogDescription>]]

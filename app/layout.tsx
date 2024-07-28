@@ -4,11 +4,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Moon, Sun } from "lucide-react";
 import ModeToggle from "@/components/ui/ModeToggle";
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, signOut } from "next-auth/react"
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { auth } from "@/auth"
 import dbConnect from "@/lib/mongoUtils";
+import AuthButton from "@/components/ui/signInButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,9 +48,7 @@ export default async function RootLayout({
                 </Link>
                 </nav>
                 <div className="flex w-full justify-end items-center gap-8 md:ml-auto md:gap-4 lg:gap-8">
-                  <Link href="/login" className='text-muted-foreground transition-colors hover:text-foreground'>
-                    Login
-                  </Link>
+                 <AuthButton session={session}/>
                   {/* <Link */}
                   {/*   href="/post" */}
                   {/*   className="text-muted-foreground transition-colors hover:text-foreground" */}
