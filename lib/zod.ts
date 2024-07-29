@@ -12,6 +12,7 @@ export const signInSchema = object({
 })
 
 export const nodeSchema = object({
+    _id: string(),
     name: string({ required_error: "Name is required" }),
     mac: string({ required_error: "Mac Address is required" }),
     status: string(),

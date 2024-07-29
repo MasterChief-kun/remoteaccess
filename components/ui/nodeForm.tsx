@@ -23,9 +23,17 @@ import { useRouter } from "next/navigation";
 import dbConnect from "@/lib/mongoUtils";
 import { DialogClose } from "./dialog";
 // import dbConnect from "@/lib/mongoUtils";
+type editObjInt = {
+  _id: string;
+  name: string;
+  mac: string;
+  port: number;
+  status: string;
+  ip_add: string;
+}
 type NodeFormProps = {
   edit?: boolean;
-  editObj?: object;
+  editObj?: editObjInt;
 }
 
 export default function NodeForm(props: NodeFormProps){
@@ -62,7 +70,7 @@ export default function NodeForm(props: NodeFormProps){
         router.push("/")
       })
     } else {
-      let req = await fetch(`/api/node/update?id=${props.editObj._id}`, {
+      let req = await fetch(`/api/node/update?id=${props?.editObj?._id}`, {
         method: "POST",
         body: JSON.stringify(values)
       });
@@ -123,7 +131,7 @@ export default function NodeForm(props: NodeFormProps){
               <FormItem>
                 <FormLabel>SSH Port</FormLabel>
                 <FormControl>
-                  <Input placeholder={props?.editObj?.port} type="number" {...field}/>
+                  <Input type="number" {...field}/>
                 </FormControl>
               </FormItem>
             )}

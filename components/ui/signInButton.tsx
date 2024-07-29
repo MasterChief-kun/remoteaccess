@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "./button"
 
 type AuthButtonProps = {
-  session: Session;
+  session?: Session | null;
 }
 
 export default function AuthButton(props: AuthButtonProps) {
@@ -14,7 +14,7 @@ export default function AuthButton(props: AuthButtonProps) {
 
   return (
     session?.user ?
-        <Button onClick={signOut} className='transition-colors'>
+        <Button onClick={() => {signOut()}} className='transition-colors'>
         Sign Out
         </Button>
         :
