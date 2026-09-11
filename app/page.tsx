@@ -5,20 +5,19 @@ import { z } from "zod"
 import { nodeSchema } from "@/lib/zod"
 import dbConnect from "@/lib/mongoUtils"
 import Node from "@/models/Node"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import NodeForm from "@/components/ui/nodeForm"
-import { Edit, Edit2, Plus } from "lucide-react"
+import { AddNodeDialog } from "@/components/AddNodeDialog"
+
+export const dynamic = 'force-dynamic';
 
 async function getData(): Promise<z.infer<typeof nodeSchema>[]> {
-  // await dbConnect();
-  // let nodes = await Node.find({})
-  let req = await fetch(`${process.env.URL}/api/node/get`, {
-    method: "GET",
-  })
-
-  let nodes = await req.json()
-  return nodes;
+  try {
+    await dbConnect();
+    const nodes = await Node.find({}).lean();
+    return JSON.parse(JSON.stringify(nodes));
+  } catch (error) {
+    console.error("Failed to fetch nodes from database:", error);
+    return [];
+  }
 }
 
 export default async function Home() {
@@ -26,21 +25,16 @@ export default async function Home() {
   let data = await getData();
 
   return (
-    <div className="container mx-auto py-10">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="my-2">
-            <Plus />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add Node</DialogTitle>
-            <DialogDescription>Create new node. Click create when done.</DialogDescription>
-          </DialogHeader>
-          <NodeForm/>
-        </DialogContent>
-      </Dialog>
+    <div className="container mx-auto py-10 space-y-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Devices & Nodes</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage remote nodes, monitor reachability, send Wake-on-LAN packets, and request shutdown.
+          </p>
+        </div>
+        <AddNodeDialog />
+      </div>
       <DataTable columns={columns} data={data}/>
     </div>
   )

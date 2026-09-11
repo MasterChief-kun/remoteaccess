@@ -4,25 +4,26 @@ import { z } from "zod"
 import { signInSchema, nodeSchema } from "./zod";
 import User from "@/models/User";
 import { signIn } from "@/auth";
-import { permanentRedirect, redirect } from "next/navigation"
 import Node from "@/models/Node"
+import dbConnect from "@/lib/mongoUtils";
+import { saltAndHashPwd } from "@/lib/cryptoUtils";
 
 export async function createUser(values: z.infer<typeof signInSchema>) {
-    await User.create({ 'email':values.email, 'password':values.password }).catch(err => {
-        console.error(err.message)
-    });
-    // await newUser.save()
+    await dbConnect();
+    const hashedPassword = await saltAndHashPwd(values.password);
+    const user = await User.create({ email: values.email, password: hashedPassword });
+    return { success: true, userId: user._id.toString() };
 }
 
 export async function createNode(values: z.infer<typeof nodeSchema>) {
-    await Node.create(values).catch(err => {
-        console.error(err.message)
-    })
+    await dbConnect();
+    const node = await Node.create(values);
+    return { success: true, nodeId: node._id.toString() };
 }
 
 export async function signInServ(values: z.infer<typeof signInSchema>) {
-    await signIn("credentials", values).catch(err => {
-        console.error(err.message)
-        throw err
+    return await signIn("credentials", {
+        ...values,
+        redirect: false,
     });
 }

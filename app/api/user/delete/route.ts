@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import dbConnect from "@/lib/mongoUtils"
 import User from "@/models/User"
 
 export async function DELETE(request: Request) {
@@ -11,10 +12,10 @@ export async function DELETE(request: Request) {
         status: 401
     })
 
-
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
+    await dbConnect()
     let del = await User.deleteOne({ '_id': id })
     return Response.json(del)
 }

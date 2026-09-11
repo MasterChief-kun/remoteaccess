@@ -12,10 +12,10 @@ export const signInSchema = object({
 })
 
 export const nodeSchema = object({
-    _id: string(),
-    name: string({ required_error: "Name is required" }),
-    mac: string({ required_error: "Mac Address is required" }),
-    status: string(),
-    ip_add: string(),
-    port: coerce.number().int(),
+    _id: string().optional(),
+    name: string({ required_error: "Name is required" }).min(1, "Name is required"),
+    mac: string({ required_error: "Mac Address is required" }).min(1, "Mac Address is required"),
+    status: string().optional().default("off"),
+    ip_add: string().optional().default(""),
+    port: coerce.number().int().default(22),
 })

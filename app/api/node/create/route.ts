@@ -1,4 +1,5 @@
 import { auth } from "@/auth"
+import dbConnect from "@/lib/mongoUtils"
 import Node from "@/models/Node"
 
 export async function POST(request: Request) {
@@ -11,6 +12,7 @@ export async function POST(request: Request) {
         status: 401
     })
    
+    await dbConnect()
     let data = await request.json()
 
     let node = await Node.create(data)

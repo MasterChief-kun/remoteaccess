@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import dbConnect from "@/lib/mongoUtils";
 import Node from "@/models/Node";
 
 export async function POST(request: Request) {
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
     if(!id) {
         return Response.error()
     } else {
+        await dbConnect()
         let node = await Node.updateOne({ '_id': id }, update)
         return Response.json(node)
     }

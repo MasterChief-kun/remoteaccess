@@ -1,16 +1,19 @@
-import { Session } from "next-auth"
+import { DefaultSession } from "next-auth"
 
-declare module 'next-auth'{
-    // interface Session {
-    //     _id: string;
-    //     password: string;
-    //     image_url: string;
-    //     role: string;
-    // }
-    interface User {
-        _id: string;
-        password: string;
-        image_url: string;
-        role: string
-    }
+declare module "next-auth" {
+  interface User {
+    id?: string;
+    _id?: string;
+    image_url?: string;
+    role?: string;
+  }
+
+  interface Session {
+    user: {
+      id?: string;
+      _id?: string;
+      image_url?: string;
+      role?: string;
+    } & DefaultSession["user"]
+  }
 }

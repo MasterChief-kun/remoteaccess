@@ -1,18 +1,20 @@
-import { auth } from "@/auth"
+import dbConnect from "@/lib/mongoUtils"
 import User from "@/models/User"
+import { saltAndHashPwd } from "@/lib/cryptoUtils"
 
 export async function POST(request: Request) {
-    // const session = await auth()
-
-    // if (!session || session?.user?.role !== "admin" ) return Response.json({
-    //     message: "Not authenticated",
-    //     session: session?.user
-    // }, {
-    //     status: 401
-    // })
-   
+    await dbConnect()
     let data = await request.json()
 
+    if (data.password) {
+        data.password = await saltAndHashPwd(data.password)
+    }
+
     let user = await User.create(data)
-    return Response.json(user)
+    return Response.json({
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        image_url: user.image_url
+    })
 }
